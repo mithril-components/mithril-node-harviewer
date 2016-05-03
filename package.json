@@ -1,0 +1,24 @@
+{
+    "name": "node-component-boilerplate",
+    "version": "1.0.0",
+    "description": "",
+    "main": "test.js",
+    "dependencies": {
+        "mithril": "^0.2.0"
+    },
+    "devDependencies": {
+        "mithril-node-render": "^0.4.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mithril-components/node-component-boilerplate.git"
+    },
+    "keywords": [
+        "mithril",
+        "nodejs"
+    ],
+    "bugs": {
+        "url": "https://github.com/mithril-components/mithril-component-boilerplate/issues"
+    },
+    "homepage": "https://github.com/mithril-components/mithril-component-boilerplate#readme"
+}
