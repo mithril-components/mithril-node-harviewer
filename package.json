@@ -1,0 +1,26 @@
+{
+  "name": "mithril-node-harviwer",
+  "version": "1.0.0",
+  "description": "HAR viewer component for Mithril NodeJS",
+  "main": "harviewer.js",
+  "dependencies": {
+    "mithril": "^0.2.0",
+    "mithril-node-piechart": "1.0.0"
+  },
+  "devDependencies": {
+    "mithril-node-render": "^0.4.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mithril-components/mithril_node_harviewer.git"
+  },
+  "keywords": [
+    "mithril",
+    "pagination",
+    "nodejs"
+  ],
+  "bugs": {
+    "url": "https://github.com/mithril-components/mithril_node_harviewer/issues"
+  },
+  "homepage": "https://github.com/mithril-components/mithril_node_harviewer#readme"
+}
