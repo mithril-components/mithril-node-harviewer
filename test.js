@@ -1,11 +1,10 @@
 'use strict'
 
-const render 	  = require('mithril-node-render');
-const component = require('./componentname');
+const render = require('mithril-node-render')
+const harviewer   = require('./harviewer');
 
-const model = {/* sample data */};
+const ctrl = harviewer.controller({/* TODO: HAR */});
 
-const ctrl = component.controller(model);
-const view = component.view(ctrl);
-const innerHtml = render(view);
-console.log(innerHtml);
+var view = harviewer.view(ctrl);
+
+console.log(render(view));
