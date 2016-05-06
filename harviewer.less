@@ -1,0 +1,208 @@
+@import '../bower_components/bootstrap/less/variables.less';
+@import '../bower_components/bootstrap/less/mixins.less';
+
+/* Extra small devices (phones, tablets less than 992px) */
+/* GENERALS */
+
+ul
+{
+    list-style: none;
+}
+
+/* PIECHART CSS */
+
+.piecharts
+{
+    display: inline-block;
+    min-height: auto;
+
+    svg
+    {
+        float: left;
+    }
+
+    ul.piechart-legend
+    {
+        float: left;
+        padding: 3px 6px;
+
+        li
+        {
+            position: relative;
+            padding-left: 2em;
+            margin-bottom: -3px;
+            font-size: 0.7em;
+        }
+
+        span
+        {
+            position: absolute;
+            top: 3px;
+            left: 0;
+            height: 0.8em;
+            width: 1.5em;
+            display: inline-block;
+            margin-right: 3px;
+        }
+    }
+}
+
+/* PIECHART TABLE */
+
+.piechart-table
+{
+    font-size: 0.8em;
+}
+
+/* ACCORDION MENU CSS*/
+
+ul.accordion
+{
+    padding: 0;
+
+    li
+    {
+        position: relative;
+        padding: 4px 0;
+    }
+
+    input[type=checkbox]
+    {
+        position: absolute;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0;
+    }
+
+    input[type=checkbox]:checked ~ ul
+    {
+        display: none;
+    }
+
+    .accordion-content
+    {
+        transform: translate(0, 0);
+        z-index: 2;
+        padding: 0;
+
+        input[type=checkbox]:checked ~ div.row
+        {
+            div
+            {
+                display: initial;
+            }
+        }
+
+        li
+        {
+            padding: 0;
+        }
+
+        div.row:not(.tabs)
+        {
+            overflow: hidden;
+
+            div
+            {
+                white-space: nowrap;
+                overflow: hidden;
+                display: none;
+            }
+
+            div:last-child
+            {
+                display: initial;
+            }
+        }
+    }
+}
+
+
+@media print
+{
+    .make-grid(print);
+
+    /* Don't wanna have href when printing */
+    a[href]:after
+    {
+        content: none !important;
+    }
+
+
+    ul.accordion
+    {
+        .accordion-content
+        {
+            div.row:not(.tabs)
+            {
+                div
+                {
+                    display: initial !important;
+                }
+            }
+        }
+    }
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: @screen-sm-min)
+{
+    .piecharts
+    {
+        min-height: 330px;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: @screen-md-min)
+{
+    .piecharts
+    {
+        min-height: 270px;
+    }
+
+    ul.accordion
+    {
+        .accordion-content
+        {
+            input[type=checkbox]
+            {
+                display: none;
+            }
+
+            div.row:not(.tabs)
+            {
+                div
+                {
+                    display: initial;
+                }
+
+                .url
+                {
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+            }
+
+            div.row:not(.tabs):hover
+            {
+                div
+                {
+                    opacity:0;
+                }
+
+                div.url
+                {
+                    font-weight: bold;
+                    opacity: 1;
+                    overflow: visible;
+                    display: inherit;
+                    z-index: 10;
+                }
+            }
+        }
+    }
+}
+

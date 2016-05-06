@@ -4,6 +4,7 @@
   "description": "HAR viewer component for Mithril NodeJS",
   "main": "harviewer.js",
   "dependencies": {
+    "localize": "*",
     "mithril": "^0.2.0",
     "mithril-node-piechart": "1.0.0"
   },
