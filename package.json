@@ -2,7 +2,7 @@
     "name": "node-component-boilerplate",
     "version": "1.0.0",
     "description": "",
-    "main": "test.js",
+    "main": "componentname.js",
     "dependencies": {
         "mithril": "^0.2.0"
     },
