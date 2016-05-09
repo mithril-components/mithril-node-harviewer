@@ -1,21 +1,27 @@
-node-mithril-component-boilerplate
-==================================
+mithril-node-harviewer
+=======================
 
-TODO: Description
+A simple HAR viewer component for Mithril and NodeJS.
 
 Usage
-=====
+-----
 
-TODO: Usage
+    const harviewer = require('mithril-node-harviewer');
+
+    const har = {...}
+
+    const ctrl = harviewer.controller(har);
+    const view = harviewer.view(ctrl);
+
 
 Options
-=======
+-------
+Node more options for this version.
 
-TODO: Options
 
 Test
-====
+----
 
-TODO: How to test
+Setup `npm install -g mct`, then:
 
-
+    mct test .
