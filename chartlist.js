@@ -39,45 +39,46 @@ const controller = (data, colors) => {
 
     for (let i = 0, len = data.entries.length; len > i; ++i) {
         // Compute data to display the action type piechart.
-        blocked +=  data.entries[i].timings.blocked;
-        dns += data.entries[i].timings.dns;
-        connect += data.entries[i].timings.connect;
-        send += data.entries[i].timings.send;
-        wait += data.entries[i].timings.wait;
-        receive += data.entries[i].timings.receive;
+        blocked += (data.entries[i].timings.blocked ? data.entries[i].timings.blocked : 0);
+        dns += (data.entries[i].timings.dns ? data.entries[i].timings.dns : 0); //data.entries[i].timings.dns;
+        connect += (data.entries[i].timings.connect ? data.entries[i].timings.connect : 0); //data.entries[i].timings.connect;
+        send += (data.entries[i].timings.send ? data.entries[i].timings.send : 0); //data.entries[i].timings.send;
+        wait += (data.entries[i].timings.wait ? data.entries[i].timings.wait : 0); // data.entries[i].timings.wait;
+        receive += (data.entries[i].timings.receive ? data.entries[i].timings.receive : 0); // data.entries[i].timings.receive;
 
         // Compute data to display the languages and technologies used.
-        if (data.entries[i].response.content.mimeType.search('html') != -1) {
-            html += data.entries[i].response.bodySize;
+        if (data.entries[i].response.content.mimeType) {
+            if (data.entries[i].response.content.mimeType.search('html') != -1) {
+                html += data.entries[i].response.bodySize;
+            }
+            else if (data.entries[i].response.content.mimeType.search('javascript') != -1) {
+                javascript += data.entries[i].response.bodySize;
+            }
+            else if (data.entries[i].response.content.mimeType.search('css') != -1) {
+                css += data.entries[i].response.bodySize;
+            }
+            else if (data.entries[i].response.content.mimeType.search('image') != -1) {
+                image += data.entries[i].response.bodySize;
+            }
+            else if (data.entries[i].response.content.mimeType.search('flash') != -1) {
+                flash += data.entries[i].response.bodySize;
+            }
+            else {
+                others += data.entries[i].response.bodySize;
+            }   
         }
-        else if (data.entries[i].response.content.mimeType.search('javascript') != -1) {
-            javascript += data.entries[i].response.bodySize;
-        }
-        else if (data.entries[i].response.content.mimeType.search('css') != -1) {
-            css += data.entries[i].response.bodySize;
-        }
-        else if (data.entries[i].response.content.mimeType.search('image') != -1) {
-            image += data.entries[i].response.bodySize;
-        }
-        else if (data.entries[i].response.content.mimeType.search('flash') != -1) {
-            flash += data.entries[i].response.bodySize;
-        }
-        else {
-            others += data.entries[i].response.bodySize;
-        }
-
         // Compute data to display the headers and bodies.
-        headSent +=  data.entries[i].request.headersSize;
-        bodySent += data.entries[i].request.bodySize;
-        headReceived += data.entries[i].response.headersSize;
-        bodyReceived += data.entries[i].response.bodySize;
+        headSent +=  (data.entries[i].request.headersSize ? data.entries[i].request.headersSize : 0); // data.entries[i].request.headersSize;
+        bodySent += (data.entries[i].request.bodySize ? data.entries[i].request.bodySize: 0); // data.entries[i].request.bodySize;
+        headReceived += (data.entries[i].response.headersSize ? data.entries[i].response.headersSize : 0); // data.entries[i].response.headersSize;
+        bodyReceived += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0); // data.entries[i].response.bodySize;
 
         // Compute data to display the headers and bodies.
         //partial += data.entries[i].response.bodySize;
-        if (data.entries[i].cache.afterRequest !== undefined)
-            cache += data.entries[i].response.bodySize;
+        if (data.entries[i].cache.afterRequest)
+            cache += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0); // data.entries[i].response.bodySize;
         else
-            downloaded +=  data.entries[i].response.bodySize;
+            downloaded += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0); // data.entries[i].response.bodySize;
     }
 
     return [
