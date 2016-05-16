@@ -16,7 +16,7 @@ Usage
 
 Options
 -------
-Node more options for this version.
+No options for this version.
 
 
 Test
