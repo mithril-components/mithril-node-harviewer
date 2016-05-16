@@ -41,10 +41,10 @@ const controller = (harFile) => {
 }
 
 const view = (ctrl) => {
-    return [
+    return m('div.harviewer', [
         chartlist.view(ctrl.chartlistCtrl),
         entrylist.view(ctrl.entrylistCtrl)
-    ]
+    ]);
 }
 
 // Export all previous functions.
