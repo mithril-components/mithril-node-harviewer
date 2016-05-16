@@ -3,15 +3,7 @@
 
 // Load required modules
 const m                 = require('mithril');
-const Localize          = require('localize');
-const chart             = require('mithril-node-piechart')
-
-
-
-// Load translation file
-const t = new Localize('./translations');
-t.throwOnMissingTranslation(false);
-t.setLocale(process.env.LANG);
+const chart             = require('mithril-node-piechart');
 
 
 
@@ -25,6 +17,16 @@ const sizePrecision = (size) => {
     }
     else {
         return size + 'B';
+    }
+}
+
+// Return a string with the time precision.
+const timePrecision = (time) => {
+    if (time > 1000) {
+        return (time / 1000).toPrecision(3) + ' s';
+    }
+    else {
+        return time + ' ms';
     }
 }
 
@@ -85,13 +87,13 @@ const controller = (data, colors) => {
             title: "Summary of request times",
             parts:
             [
-                { title: t.translate("Blocked"),   value: (blocked > 0 ? blocked : 0),   color: colors.blocked },
-                { title: t.translate("DNS"),       value: (dns > 0 ? dns : 0),           color: colors.dns },
-                { title: t.translate("SSL/TLS"),   value: 0,                             color: colors.ssl },
-                { title: t.translate("Connect"),   value: (connect > 0 ? connect : 0),   color: colors.connect },
-                { title: t.translate("Send"),      value: (send > 0 ? send : 0),         color: colors.send },
-                { title: t.translate("Wait"),      value: (wait > 0 ? wait : 0),         color: colors.wait },
-                { title: t.translate("Receive"),   value: (receive > 0 ? receive : 0),   color: colors.receive }
+                { title: `Blocked`,   value: (blocked > 0 ? blocked : 0),   color: colors.blocked },
+                { title: `DNS`,       value: (dns > 0 ? dns : 0),           color: colors.dns },
+                { title: `SSL/TLS`,   value: 0,                             color: colors.ssl },
+                { title: `Connect`,   value: (connect > 0 ? connect : 0),   color: colors.connect },
+                { title: `Send`,      value: (send > 0 ? send : 0),         color: colors.send },
+                { title: `Wait`,      value: (wait > 0 ? wait : 0),         color: colors.wait },
+                { title: `Receive`,   value: (receive > 0 ? receive : 0),   color: colors.receive }
             ]
         }),
         chart.controller({
@@ -100,12 +102,12 @@ const controller = (data, colors) => {
             title: "Summary of content types",
             parts:
             [
-                { title: t.translate("HTML/Text"),   value: (html > 0 ? html : 0) / 100,               color: colors.html },
-                { title: t.translate("JavaScript"),  value: (javascript > 0 ? javascript : 0) / 100,   color: colors.javascript },
-                { title: t.translate("CSS"),         value: (css > 0 ? css : 0) / 100,                 color: colors.css },
-                { title: t.translate("Image"),       value: (image > 0 ? image : 0)  / 100,            color: colors.image },
-                { title: t.translate("Flash"),       value: (flash > 0 ? flash : 0) / 100,             color: colors.flash },
-                { title: t.translate("Others"),      value: (others > 0 ? others : 0) / 100,           color: colors.others }
+                { title: `HTML/Text`,   value: (html > 0 ? html : 0) / 100,               color: colors.html },
+                { title: `JavaScript`,  value: (javascript > 0 ? javascript : 0) / 100,   color: colors.javascript },
+                { title: `CSS`,         value: (css > 0 ? css : 0) / 100,                 color: colors.css },
+                { title: `Image`,       value: (image > 0 ? image : 0)  / 100,            color: colors.image },
+                { title: `Flash`,       value: (flash > 0 ? flash : 0) / 100,             color: colors.flash },
+                { title: `Others`,      value: (others > 0 ? others : 0) / 100,           color: colors.others }
             ]
         }),
         chart.controller({
@@ -114,10 +116,10 @@ const controller = (data, colors) => {
             title: "Sent and received bodies & headers",
             parts:
             [
-                { title: t.translate("Headers Sent"),      value: (headSent > 0 ? headSent : 0),           color: colors.headSent },
-                { title: t.translate("Bodies Sent"),       value: (bodySent > 0 ? bodySent : 0),           color: colors.bodySent },
-                { title: t.translate("Headers Received"),  value: (headReceived > 0 ? headReceived : 0),   color: colors.headReceived },
-                { title: t.translate("Bodies Received"),   value: (bodyReceived > 0 ? bodyReceived : 0),   color: colors.bodyReceived }
+                { title: `Headers Sent`,      value: (headSent > 0 ? headSent : 0),           color: colors.headSent },
+                { title: `Bodies Sent`,       value: (bodySent > 0 ? bodySent : 0),           color: colors.bodySent },
+                { title: `Headers Received`,  value: (headReceived > 0 ? headReceived : 0),   color: colors.headReceived },
+                { title: `Bodies Received`,   value: (bodyReceived > 0 ? bodyReceived : 0),   color: colors.bodyReceived }
           ]
         }),
         chart.controller({
@@ -126,9 +128,9 @@ const controller = (data, colors) => {
             title: "Comparison of data from server and cache",
             parts:
             [
-                { title: t.translate("Downloaded"),   value: (downloaded > 0 ? downloaded : 0),    color: colors.downloaded },
-                { title: t.translate("Partial"),      value: (partial > 0 ? partial : 0),          color: colors.partial },
-                { title: t.translate("From Cache"),   value: (cache > 0 ? cache : 0),              color: colors.cache }
+                { title: `Downloaded`,   value: (downloaded > 0 ? downloaded : 0),    color: colors.downloaded },
+                { title: `Partial`,      value: (partial > 0 ? partial : 0),          color: colors.partial },
+                { title: `From Cache`,   value: (cache > 0 ? cache : 0),              color: colors.cache }
           ]
         })
     ];
@@ -141,12 +143,12 @@ const view = (ctrl) => {
             return m('div.col-md-3.col-sm-6.col-xs-12.piecharts', [
                 m('h6.row', chartCtrl.title),
                 // Render pie charts.
-                chart.view(chartCtrl),
+                m('div.row', chart.view(chartCtrl)),
                     // Render a table to display details about pie chart data.
                 chartCtrl.parts.map(part => {
                     return m('div.row.piechart-table', [
                             m('div.col-xs-6', part.title),
-                            m('div.col-xs-6', (index > 0 ? sizePrecision(part.value) : part.value + ' ms'))
+                            m('div.col-xs-6', (index > 0 ? sizePrecision(part.value) : timePrecision(part.value)))
                         ]);
                 })
             ]);
