@@ -3,6 +3,8 @@ mithril-node-harviewer
 
 A simple HAR viewer component for Mithril and NodeJS.
 
+![HAR viewer screenshot](screenshot.png)
+
 Usage
 -----
 
