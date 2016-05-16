@@ -13,31 +13,31 @@ const controller = (page, entry, colors) => {
         onLoad:             page.onLoad ? page.onLoad : 0,
         onContentLoad:      page.onContentLoad ? page.onContentLoad : 0,
         startedDateTime:    Date.parse(entry.startedDateTime) - Date.parse(page.startedDateTime),
-        value:              entry.time,
+        value:              (entry.time ? entry.time : 0),
         parts: [
             {
                 // DNS
-                value: entry.timings.dns,
+                value: (entry.timings.dns ? entry.timings.dns : 0),
                 color: colors.dns
             },
             {
                 // CONNECT
-                value: entry.timings.connect,
+                value: (entry.timings.connect ? entry.timings.connect : 0),
                 color: colors.connect
             },
             {
                 // SEND
-                value: entry.timings.send,
+                value: (entry.timings.send ? entry.timings.send : 0),
                 color: colors.send
             },
             {
                 // WAIT
-                value: entry.timings.wait,
+                value: (entry.timings.wait ? entry.timings.wait : 0),
                 color: colors.wait
             },
             {
                 // RECEIVE
-                value: entry.timings.receive,
+                value: (entry.timings.receive ? entry.timings.receive : 0),
                 color: colors.receive
             }
         ],
