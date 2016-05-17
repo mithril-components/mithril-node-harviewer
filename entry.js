@@ -3,20 +3,15 @@
 
 // Load required modules
 const m                 = require('mithril');
-const Localize          = require('localize');
 
 const bar               = require('./bar');
-
-
-// Load translation file
-const t = new Localize('./translations');
-t.throwOnMissingTranslation(false);
-t.setLocale(process.env.LANG);
 
 
 
 // Return a string with the byte precision.
 const sizePrecision = (size) => {
+    size = size < 0 ? 0 : size;
+
     if (size > 10000) {
         return (size / 1000).toPrecision(3) + 'KB';
     }
@@ -25,6 +20,18 @@ const sizePrecision = (size) => {
     }
     else {
         return size + 'B';
+    }
+}
+
+// Return a string with the time precision.
+const timePrecision = (time) => {
+    time = time < 0 ? 0 : time;
+
+    if (time > 1000) {
+        return (time / 1000).toPrecision(3) + ' s';
+    }
+    else {
+        return time + ' ms';
     }
 }
 
@@ -43,8 +50,18 @@ const renderBar = (page, firstEntry, entry, colors) => {
 
 // Return a JSON containing the page and his entries.
 const controller = (page, entries, colors) => {
+    let totalSize = 0;
+    let biggestTime = 0;
+
+    entries.forEach((entry, index) => {
+        totalSize += entry.response.bodySize;
+        biggestTime = (entry.time > biggestTime ? entry.time : biggestTime);
+    })
+
     return {
         firstEntry:     entries[0],
+        totalSize:      totalSize,
+        biggestTime:    biggestTime,
         page:           page,
         entries:        entries,
         colors:         colors
@@ -53,35 +70,47 @@ const controller = (page, entries, colors) => {
 
 // Display all entries for a page.
 const view = (ctrl) => {
-    let totalSize = 0;
-
     return m('li', { id: ctrl.page.id }, [
-        m('h4', ctrl.page.title),
-        m('div', t.translate('Requests start ') + (Date.parse(ctrl.firstEntry.startedDateTime) - Date.parse(ctrl.page.startedDateTime)) + t.translate('ms before the first request.')),
-        m('div', ''),
+        m('div.data-summary', [
+            m('h2', ctrl.page.title),
+            m('div.row', [
+                m('div.col-md-3.col-xs-6', `Total load time : `),
+                m('div.col-md-9.col-xs-6', timePrecision(ctrl.page.pageTimings.onLoad))
+            ]),
+            m('div.row', [
+                m('div.col-md-3.col-xs-6', `Time to first byte : `),
+                m('div.col-md-9.col-xs-6', timePrecision(Date.parse(ctrl.firstEntry.startedDateTime) - Date.parse(ctrl.page.startedDateTime)))
+            ]),
+            m('div.row', [
+                m('div.col-md-3.col-xs-6', `Total load : `),
+                m('div.col-md-9.col-xs-6', sizePrecision(ctrl.totalSize))
+            ]),
+            m('div.row', [
+                m('div.col-md-3.col-xs-6', `Most biggest time consuming : `),
+                m('div.col-md-9.col-xs-6', timePrecision(ctrl.biggestTime))
+            ]),
+            m('div.row', [
+                m('div.col-md-3.col-xs-6', `Total requests : `),
+                m('div.col-md-9.col-xs-6', ctrl.entries.length + ` requests`)
+            ])
+        ]),
         m('ul.accordion-content', [
             ctrl.entries.map((entry, index) => {
-
-                totalSize += entry.response.bodySize;
+                const status = entry.response.status.toString();
 
                 return m('li', { id: index }, [
                     m('input', { type: 'checkbox' }),
-                    m('div.row.', [
+                    m('div.row', [
                         m('div.col-md-2.col-xs-12.col-print-12.url', [
                             entry.request.method + ' ',
                             m('a', { href: entry.request.url }, entry.request.url)
                         ]),
-                        m('div.col-md-1.col-xs-12.col-print-12', entry.response.status + ' ' + entry.response.statusText),
+                        m('div.col-md-1.col-xs-12.col-print-12', status.charAt(0) === '4' || status.charAt(0) === '5' ? { class: 'text-danger' } : {}, status + ' ' + entry.response.statusText),
                         m('div.col-md-1.col-xs-12.col-print-12', sizePrecision(entry.response.bodySize)),
                         m('div.col-md-8.col-xs-12.col-print-12', renderBar(ctrl.page, ctrl.firstEntry, entry, ctrl.colors))
                     ])
                 ]);
-            }),
-            m('li.row', [
-                m('div.col-xs-3', ctrl.entries.length + t.translate(' Requests')),
-                m('div.col-xs-4', sizePrecision(totalSize)),
-                m('div.col-xs-5', t.translate('onload: ') + ctrl.page.pageTimings.onLoad + 'ms'),
-            ])
+            })
         ])
     ]);
 }
