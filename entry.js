@@ -96,14 +96,16 @@ const view = (ctrl) => {
         ]),
         m('ul.accordion-content', [
             ctrl.entries.map((entry, index) => {
+                const status = entry.response.status.toString();
+
                 return m('li', { id: index }, [
                     m('input', { type: 'checkbox' }),
-                    m('div.row.', [
+                    m('div.row', [
                         m('div.col-md-2.col-xs-12.col-print-12.url', [
                             entry.request.method + ' ',
                             m('a', { href: entry.request.url }, entry.request.url)
                         ]),
-                        m('div.col-md-1.col-xs-12.col-print-12', entry.response.status + ' ' + entry.response.statusText),
+                        m('div.col-md-1.col-xs-12.col-print-12', status.charAt(0) === '4' || status.charAt(0) === '5' ? { class: 'text-danger' } : {}, status + ' ' + entry.response.statusText),
                         m('div.col-md-1.col-xs-12.col-print-12', sizePrecision(entry.response.bodySize)),
                         m('div.col-md-8.col-xs-12.col-print-12', renderBar(ctrl.page, ctrl.firstEntry, entry, ctrl.colors))
                     ])
