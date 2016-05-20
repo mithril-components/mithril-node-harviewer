@@ -32,7 +32,7 @@ const timePrecision = (time) => {
 
 const controller = (data, colors) => {
     // Define variables to store and compute data for the chartpie.
-    let blocked = 0, dns = 0, connect = 0, send = 0, wait = 0, receive = 0,
+    let blocked = 0, dns = 0, connect = 0, send = 0, wait = 0, receive = 0, ssl = 0,
         html = 0, javascript = 0, css = 0, image = 0, flash = 0, others = 0,
         headSent = 0, bodySent = 0, headReceived = 0, bodyReceived = 0,
         downloaded = 0, partial = 0, cache = 0;
@@ -40,11 +40,12 @@ const controller = (data, colors) => {
     for (let i = 0, len = data.entries.length; len > i; ++i) {
         // Compute data to display the action type piechart.
         blocked += (data.entries[i].timings.blocked ? data.entries[i].timings.blocked : 0);
-        dns += (data.entries[i].timings.dns ? data.entries[i].timings.dns : 0); //data.entries[i].timings.dns;
-        connect += (data.entries[i].timings.connect ? data.entries[i].timings.connect : 0); //data.entries[i].timings.connect;
-        send += (data.entries[i].timings.send ? data.entries[i].timings.send : 0); //data.entries[i].timings.send;
-        wait += (data.entries[i].timings.wait ? data.entries[i].timings.wait : 0); // data.entries[i].timings.wait;
-        receive += (data.entries[i].timings.receive ? data.entries[i].timings.receive : 0); // data.entries[i].timings.receive;
+        dns += (data.entries[i].timings.dns ? data.entries[i].timings.dns : 0);
+        connect += (data.entries[i].timings.connect ? data.entries[i].timings.connect : 0);
+        send += (data.entries[i].timings.send ? data.entries[i].timings.send : 0);
+        wait += (data.entries[i].timings.wait ? data.entries[i].timings.wait : 0);
+        receive += (data.entries[i].timings.receive ? data.entries[i].timings.receive : 0);
+        ssl += (data.entries[i].timings.ssl ? data.entries[i].timings.ssl : 0);
 
         // Compute data to display the languages and technologies used.
         if (data.entries[i].response.content.mimeType) {
@@ -68,17 +69,17 @@ const controller = (data, colors) => {
             }   
         }
         // Compute data to display the headers and bodies.
-        headSent +=  (data.entries[i].request.headersSize ? data.entries[i].request.headersSize : 0); // data.entries[i].request.headersSize;
-        bodySent += (data.entries[i].request.bodySize ? data.entries[i].request.bodySize: 0); // data.entries[i].request.bodySize;
-        headReceived += (data.entries[i].response.headersSize ? data.entries[i].response.headersSize : 0); // data.entries[i].response.headersSize;
-        bodyReceived += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0); // data.entries[i].response.bodySize;
+        headSent +=  (data.entries[i].request.headersSize ? data.entries[i].request.headersSize : 0);
+        bodySent += (data.entries[i].request.bodySize ? data.entries[i].request.bodySize: 0);
+        headReceived += (data.entries[i].response.headersSize ? data.entries[i].response.headersSize : 0);
+        bodyReceived += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
 
         // Compute data to display the headers and bodies.
         //partial += data.entries[i].response.bodySize;
         if (data.entries[i].cache.afterRequest)
-            cache += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0); // data.entries[i].response.bodySize;
+            cache += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
         else
-            downloaded += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0); // data.entries[i].response.bodySize;
+            downloaded += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
     }
 
     return [
@@ -90,7 +91,7 @@ const controller = (data, colors) => {
             [
                 { title: `Blocked`,   value: (blocked > 0 ? blocked : 0),   color: colors.blocked },
                 { title: `DNS`,       value: (dns > 0 ? dns : 0),           color: colors.dns },
-                { title: `SSL/TLS`,   value: 0,                             color: colors.ssl },
+                { title: `SSL/TLS`,   value: (ssl > 0 ? ssl : 0),                             color: colors.ssl },
                 { title: `Connect`,   value: (connect > 0 ? connect : 0),   color: colors.connect },
                 { title: `Send`,      value: (send > 0 ? send : 0),         color: colors.send },
                 { title: `Wait`,      value: (wait > 0 ? wait : 0),         color: colors.wait },
