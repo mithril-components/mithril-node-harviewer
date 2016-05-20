@@ -70,6 +70,7 @@ const controller = (page, entries, colors) => {
 
 // Display all entries for a page.
 const view = (ctrl) => {
+    const TTFB = ctrl.firstEntry.timings.blocked + ctrl.firstEntry.timings.dns + ctrl.firstEntry.timings.connect + ctrl.firstEntry.timings.send + ctrl.firstEntry.timings.wait + ctrl.firstEntry.timings.ssl;
     return m('li', { id: ctrl.page.id }, [
         m('div.data-summary', [
             m('h2', ctrl.page.title),
@@ -79,7 +80,7 @@ const view = (ctrl) => {
             ]),
             m('div.row', [
                 m('div.col-md-3.col-xs-6', `Time to first byte : `),
-                m('div.col-md-9.col-xs-6', timePrecision(Date.parse(ctrl.firstEntry.startedDateTime) - Date.parse(ctrl.page.startedDateTime)))
+                m('div.col-md-9.col-xs-6', timePrecision(TTFB))
             ]),
             m('div.row', [
                 m('div.col-md-3.col-xs-6', `Total load : `),
