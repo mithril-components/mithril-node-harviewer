@@ -10,6 +10,9 @@ const bar               = require('./bar');
 
 // Return a string with the byte precision.
 const sizePrecision = (size) => {
+    if (!size)
+        return '----';
+
     size = size < 0 ? 0 : size;
 
     if (size > 10000) {
@@ -25,6 +28,9 @@ const sizePrecision = (size) => {
 
 // Return a string with the time precision.
 const timePrecision = (time) => {
+    if (!time)
+        return '----';
+
     time = time < 0 ? 0 : time;
 
     if (time > 1000) {
@@ -106,7 +112,7 @@ const view = (ctrl) => {
                             entry.request.method + ' ',
                             m('a', { href: entry.request.url }, entry.request.url)
                         ]),
-                        m('div.col-md-1.col-xs-12.col-print-12', status.charAt(0) === '4' || status.charAt(0) === '5' ? { class: 'text-danger' } : {}, status + ' ' + entry.response.statusText),
+                        m('div.col-md-1.col-xs-12.col-print-12', status.charAt(0) === '4' || status.charAt(0) === '5' ? { class: 'text-danger' } : {}, status + ' ' + (entry.response.statusText ? entry.response.statusText : 'Timeout')),
                         m('div.col-md-1.col-xs-12.col-print-12', sizePrecision(entry.response.bodySize)),
                         m('div.col-md-8.col-xs-12.col-print-12', renderBar(ctrl.page, ctrl.firstEntry, entry, ctrl.colors))
                     ])
