@@ -9,6 +9,11 @@ const chart             = require('mithril-node-piechart');
 
 // Return a string with the byte precision.
 const sizePrecision = (size) => {
+    if (!size)
+        return '----';
+
+    size = size < 0 ? 0 : size;
+
     if (size > 10000) {
         return (size / 1000).toPrecision(3) + 'KB';
     }
@@ -22,6 +27,11 @@ const sizePrecision = (size) => {
 
 // Return a string with the time precision.
 const timePrecision = (time) => {
+    if (!time)
+        return '----';
+
+    time = time < 0 ? 0 : time;
+
     if (time > 1000) {
         return (time / 1000).toPrecision(3) + ' s';
     }
@@ -48,7 +58,7 @@ const controller = (data, colors) => {
         ssl += (data.entries[i].timings.ssl ? data.entries[i].timings.ssl : 0);
 
         // Compute data to display the languages and technologies used.
-        if (data.entries[i].response.content.mimeType) {
+        if (data.entries[i].response && data.entries[i].response.content && data.entries[i].response.content.mimeType) {
             if (data.entries[i].response.content.mimeType.search('html') != -1) {
                 html += data.entries[i].response.bodySize;
             }
