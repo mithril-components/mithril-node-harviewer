@@ -1,10 +1,14 @@
-#!/usr/bin/env node
-'use strict'
+// Defines that JS code should be executed in "strict mode".
+"use strict";
+
+/**
+* About rendering a list of entries.
+*/
 
 // Load required modules
-const m           = require('mithril');
+const m           = require("mithril");
 
-const entry       = require('./entry');
+const entry       = require("./entry");
 
 
 
@@ -42,7 +46,7 @@ const controller = (data, colors) => {
 
 // Return a entries list by using the view of the entry mithril module.
 const view = (ctrl) => {
-    return m('ul.accordion', [
+    return m("ul.accordion", [
         ctrl.map(barCtrl => {
             return entry.view(barCtrl);
         })

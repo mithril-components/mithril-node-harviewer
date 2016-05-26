@@ -1,45 +1,20 @@
-#!/usr/bin/env node
-'use strict'
+// Defines that JS code should be executed in "strict mode".
+"use strict";
+
+/**
+* About rendering a list of specific charts.
+*/
+
 
 // Load required modules
-const m                 = require('mithril');
-const chart             = require('mithril-node-piechart');
+const m                 = require("mithril");
+const chart             = require("mithril-node-piechart");
+
+const utilities         = require("./utilities");
 
 
 
-// Return a string with the byte precision.
-const sizePrecision = (size) => {
-    if (!size)
-        return '----';
-
-    size = size < 0 ? 0 : size;
-
-    if (size > 10000) {
-        return (size / 1000).toPrecision(3) + 'KB';
-    }
-    else if (size > 1000) {
-        return (size / 1000).toPrecision(2) + 'KB';
-    }
-    else {
-        return size + 'B';
-    }
-}
-
-// Return a string with the time precision.
-const timePrecision = (time) => {
-    if (!time)
-        return '----';
-
-    time = time < 0 ? 0 : time;
-
-    if (time > 1000) {
-        return (time / 1000).toPrecision(3) + ' s';
-    }
-    else {
-        return time + ' ms';
-    }
-}
-
+// Compute and return JSON containing data to render pie charts about har content.
 const controller = (data, colors) => {
     // Define variables to store and compute data for the chartpie.
     let blocked = 0, dns = 0, connect = 0, send = 0, wait = 0, receive = 0, ssl = 0,
@@ -59,19 +34,19 @@ const controller = (data, colors) => {
 
         // Compute data to display the languages and technologies used.
         if (data.entries[i].response && data.entries[i].response.content && data.entries[i].response.content.mimeType) {
-            if (data.entries[i].response.content.mimeType.search('html') != -1) {
+            if (data.entries[i].response.content.mimeType.search("html") != -1) {
                 html += data.entries[i].response.bodySize;
             }
-            else if (data.entries[i].response.content.mimeType.search('javascript') != -1) {
+            else if (data.entries[i].response.content.mimeType.search("javascript") != -1) {
                 javascript += data.entries[i].response.bodySize;
             }
-            else if (data.entries[i].response.content.mimeType.search('css') != -1) {
+            else if (data.entries[i].response.content.mimeType.search("css") != -1) {
                 css += data.entries[i].response.bodySize;
             }
-            else if (data.entries[i].response.content.mimeType.search('image') != -1) {
+            else if (data.entries[i].response.content.mimeType.search("image") != -1) {
                 image += data.entries[i].response.bodySize;
             }
-            else if (data.entries[i].response.content.mimeType.search('flash') != -1) {
+            else if (data.entries[i].response.content.mimeType.search("flash") != -1) {
                 flash += data.entries[i].response.bodySize;
             }
             else {
@@ -148,19 +123,19 @@ const controller = (data, colors) => {
     ];
 }
 
-// Render every charts.
+// Return view to render every pie charts.
 const view = (ctrl) => {
-    return m('div.row', [
+    return m("div.row", [
         ctrl.map((chartCtrl, index) => {
-            return m('div.col-md-3.col-sm-6.col-xs-12.piecharts', [
-                m('h6.row', chartCtrl.title),
+            return m("div.col-md-3.col-sm-6.col-xs-12.piecharts", [
+                m("h6.row", chartCtrl.title),
                 // Render pie charts.
-                m('div.row', chart.view(chartCtrl)),
+                m("div.row", chart.view(chartCtrl)),
                     // Render a table to display details about pie chart data.
                 chartCtrl.parts.map(part => {
-                    return m('div.row.piechart-table', [
-                            m('div.col-xs-6', part.title),
-                            m('div.col-xs-6', (index > 0 ? sizePrecision(part.value) : timePrecision(part.value)))
+                    return m("div.row.piechart-table", [
+                            m("div.col-xs-6", part.title),
+                            m("div.col-xs-6", (index > 0 ? utilities.sizePrecision(part.value) : utilities.timePrecision(part.value)))
                         ]);
                 })
             ]);

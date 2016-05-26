@@ -16,8 +16,8 @@
   },
   "keywords": [
     "mithril",
-    "pagination",
-    "nodejs"
+    "nodejs",
+    "har"
   ],
   "bugs": {
     "url": "https://github.com/mithril-components/mithril_node_harviewer/issues"

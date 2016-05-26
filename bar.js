@@ -1,11 +1,16 @@
-#!/usr/bin/env node
-'use strict'
+// Defines that JS code should be executed in "strict mode".
+"use strict";
+
+/**
+* About rendering a timings har data bar.
+*/
 
 // Load required modules
-const m           = require('mithril');
+const m           = require("mithril");
 
 
 
+// Return JSON containing data to render timings har data bar.
 const controller = (page, entry, colors) => {
     return ({
         width:              90,
@@ -44,59 +49,59 @@ const controller = (page, entry, colors) => {
     })
 }
 
-
+// Return a view to render a SVG of a timings har data bar.
 const view = (ctrl) => {
     let startedDateTime = ctrl.startedDateTime;
-    return m('svg', {
-        width:          '100%',
+    return m("svg", {
+        width:          "100%",
         height:         ctrl.height,
-        xmlns:          'http://www.w3.org/2000/svg',
-        'xmlns:xlink':  'http://www.w3.org/1999/xlink'
+        xmlns:          "http://www.w3.org/2000/svg",
+        "xmlns:xlink":  "http://www.w3.org/1999/xlink"
     }, [
-        m('rect', {
+        m("rect", {
             x:              0,
             y:              0,
-            width:          '100%',
+            width:          "100%",
             height:         ctrl.height,
-            'stroke-width': 1,
-            stroke:         '#000',
+            "stroke-width": 1,
+            stroke:         "#000",
             opacity:        0.3,
-            fill:           'none'
+            fill:           "none"
         }),
         // Draw every request phase time.
         ctrl.parts.map((map) => {
             const start = startedDateTime;
             startedDateTime += (map.value < 0 ? 0 : map.value);
-            return m('rect', {
-                x:         (ctrl.width * start) / ctrl.onLoad + '%',
+            return m("rect", {
+                x:         (ctrl.width * start) / ctrl.onLoad + "%",
                 y:         0,
-                width:     (ctrl.width * map.value) / ctrl.onLoad + '%',
+                width:     (ctrl.width * map.value) / ctrl.onLoad + "%",
                 height:    ctrl.height,
                 fill:      map.color
             });
         }),
         // Display the request time.
-        m('text', {
-            x:      (ctrl.width * startedDateTime) / ctrl.onLoad + 1 + '%',
+        m("text", {
+            x:      (ctrl.width * startedDateTime) / ctrl.onLoad + 1 + "%",
             y:      ctrl.height * 3 / 4
-        }, (ctrl.value > 1000 ? ((ctrl.value / 1000).toPrecision(2) + ' s') : (ctrl.value + ' ms'))),
+        }, (ctrl.value > 1000 ? ((ctrl.value / 1000).toPrecision(2) + " s") : (ctrl.value + " ms"))),
         // Draw the stroke showing when the page is loaded.
-        m('line', {
-            x1:             ctrl.width + '%',
+        m("line", {
+            x1:             ctrl.width + "%",
             y1:             0,
-            x2:             ctrl.width + '%',
+            x2:             ctrl.width + "%",
             y1:             20,
-            'stroke-width': 0.3,
-            stroke:         'red'
+            "stroke-width": 0.3,
+            stroke:         "red"
         }),
         // Draw the stroke showing when the DOM is loaded.
-        m('line', {
-            x1:             (ctrl.width * ctrl.onContentLoad) / ctrl.onLoad + '%',
+        m("line", {
+            x1:             (ctrl.width * ctrl.onContentLoad) / ctrl.onLoad + "%",
             y1:             0,
-            x2:             (ctrl.width  * ctrl.onContentLoad) / ctrl.onLoad + '%',
+            x2:             (ctrl.width  * ctrl.onContentLoad) / ctrl.onLoad + "%",
             y1:             20,
-            'stroke-width': 0.3,
-            stroke:         'blue'
+            "stroke-width": 0.3,
+            stroke:         "blue"
         })
     ]);
 }
