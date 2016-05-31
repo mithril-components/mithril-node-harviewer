@@ -6,7 +6,7 @@ A simple HAR viewer component for Mithril and NodeJS.
 ![HAR viewer screenshot](screenshot.png)
 
 Usage
------
+=====
 
     const harviewer = require('mithril-node-harviewer');
 
@@ -17,12 +17,12 @@ Usage
 
 
 Options
--------
+=======
 No options for this version.
 
 
 Test
-----
+====
 
 Setup `npm install -g mct`, then:
 
