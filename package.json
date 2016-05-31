@@ -1,5 +1,5 @@
 {
-  "name": "mithril-node-harviwer",
+  "name": "mithril-node-harviewer",
   "version": "1.0.0",
   "description": "HAR viewer component for Mithril NodeJS",
   "main": "harviewer.js",
