@@ -10,7 +10,7 @@ Usage
 
     const harviewer = require('mithril-node-harviewer');
 
-    const har = {...};
+    const har = {...}
 
     const ctrl = harviewer.controller(har);
     const view = harviewer.view(ctrl);
@@ -18,7 +18,7 @@ Usage
 
 Options
 -------
-No options for this version.
+Node more options for this version.
 
 
 Test
@@ -26,4 +26,4 @@ Test
 
 Setup `npm install -g mct`, then:
 
-    mct test harviewer.js
+    mct test .

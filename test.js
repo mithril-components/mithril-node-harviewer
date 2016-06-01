@@ -11,7 +11,4 @@ const view = harviewer.view(ctrl);
 
 const innerHtml = render(view);
 
-// console.log(innerHtml);
-
-const base = fs.readFileSync('template.html', 'UTF-8');
-fs.writeFileSync('index.html', base.replace('%CONTENT%', innerHtml), 'UTF-8');
+console.log(innerHtml);
