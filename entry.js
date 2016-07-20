@@ -20,7 +20,7 @@ const renderBar = (page, firstEntry, entry, colors) => {
         onLoad:             page.pageTimings.onLoad - (Date.parse(firstEntry.startedDateTime) - Date.parse(page.startedDateTime)),
         onContentLoad:      page.pageTimings.onContentLoad - firstEntry.time,
         startedDateTime:    firstEntry.startedDateTime
-  };
+    };
 
     const ctrl = bar.controller(redefinedPage, entry, colors);
     return bar.view(ctrl);
@@ -49,6 +49,7 @@ const controller = (page, entries, colors) => {
 // Display all entries for a page.
 const view = (ctrl) => {
     const TTFB = ctrl.firstEntry.timings.blocked + ctrl.firstEntry.timings.dns + ctrl.firstEntry.timings.connect + ctrl.firstEntry.timings.send + ctrl.firstEntry.timings.wait + ctrl.firstEntry.timings.ssl;
+
     return m("li", { id: ctrl.page.id }, [
         m("div.data-summary", [
             m("h2", ctrl.page.title),
@@ -65,7 +66,7 @@ const view = (ctrl) => {
                 m("div.col-md-9.col-xs-6", utilities.sizePrecision(ctrl.totalSize))
             ]),
             m("div.row", [
-                m("div.col-md-3.col-xs-6", `Most biggest time consuming : `),
+                m("div.col-md-3.col-xs-6", `Most time consuming : `),
                 m("div.col-md-9.col-xs-6", utilities.timePrecision(ctrl.biggestTime))
             ]),
             m("div.row", [

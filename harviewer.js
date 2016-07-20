@@ -7,6 +7,7 @@
 
 // Load required modules
 const m         = require("mithril");
+const phantom   = require("phantom");
 
 const entrylist = require("./entrylist");
 const chartlist = require("./chartlist");
@@ -47,9 +48,11 @@ const controller = (harFile) => {
 
 // Return view to render har data.
 const view = (ctrl) => {
-    return m("div.harviewer", [
-        chartlist.view(ctrl.chartlistCtrl),
-        entrylist.view(ctrl.entrylistCtrl)
+    return m("div", [
+        m("div.harviewer", [
+            chartlist.view(ctrl.chartlistCtrl),
+            entrylist.view(ctrl.entrylistCtrl)
+        ])
     ]);
 }
 

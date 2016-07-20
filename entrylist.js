@@ -46,6 +46,7 @@ const controller = (data, colors) => {
 
 // Return a entries list by using the view of the entry mithril module.
 const view = (ctrl) => {
+
     return m("ul.accordion", [
         ctrl.map(barCtrl => {
             return entry.view(barCtrl);

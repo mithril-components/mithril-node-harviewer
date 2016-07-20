@@ -76,7 +76,7 @@ const controller = (data, colors) => {
             [
                 { title: `Blocked`,   value: (blocked > 0 ? blocked : 0),   color: colors.blocked },
                 { title: `DNS`,       value: (dns > 0 ? dns : 0),           color: colors.dns },
-                { title: `SSL/TLS`,   value: (ssl > 0 ? ssl : 0),                             color: colors.ssl },
+                { title: `SSL/TLS`,   value: (ssl > 0 ? ssl : 0),           color: colors.ssl },
                 { title: `Connect`,   value: (connect > 0 ? connect : 0),   color: colors.connect },
                 { title: `Send`,      value: (send > 0 ? send : 0),         color: colors.send },
                 { title: `Wait`,      value: (wait > 0 ? wait : 0),         color: colors.wait },
@@ -127,7 +127,7 @@ const controller = (data, colors) => {
 const view = (ctrl) => {
     return m("div.row", [
         ctrl.map((chartCtrl, index) => {
-            return m("div.col-md-3.col-sm-6.col-xs-12.piecharts", [
+            return m("div.col-lg-3.col-md-6.col-xs-12.piecharts", [
                 m("h6.row", chartCtrl.title),
                 // Render pie charts.
                 m("div.row", chart.view(chartCtrl)),
@@ -135,7 +135,7 @@ const view = (ctrl) => {
                 chartCtrl.parts.map(part => {
                     return m("div.row.piechart-table", [
                             m("div.col-xs-6", part.title),
-                            m("div.col-xs-6", (index > 0 ? utilities.sizePrecision(part.value) : utilities.timePrecision(part.value)))
+                            (part.title === "Wait" || part.title === "Receive" ? "" : m("div.col-xs-6", (index > 0 ? utilities.sizePrecision(part.value) : utilities.timePrecision(part.value))))
                         ]);
                 })
             ]);
