@@ -7,7 +7,6 @@
 
 // Load required modules
 const m         = require("mithril");
-const phantom   = require("phantom");
 
 const entrylist = require("./entrylist");
 const chartlist = require("./chartlist");
