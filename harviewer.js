@@ -16,7 +16,7 @@ const chartlist = require("./chartlist");
 // Return JSON containing all data to display har data.
 const controller = (harFile) => {
     // Checking if the given har file exist.
-    const har = (harFile && harFile.log ? harFile : {});
+    const har = (harFile && harFile.log ? harFile.log : {});
 
     // Define a unique colors used for bar and pie chart rendering.
     const colors = {
