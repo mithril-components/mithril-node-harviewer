@@ -14,10 +14,10 @@ const entry       = require("./entry");
 
 // Return an array using the controller of the entry mithril module.
 const controller = (data, colors) => {
-    return data.pages.map(page => {
+    return !(data && data.pages) ? [ entry.controller({}, [], colors) ] : data.pages.map(page => {
 
         // Filter entries, keep the one related to the page.
-        const filterEntries = data.entries.filter((entry) => {
+        const filterEntries = !data.entries ? [] : data.entries.filter((entry) => {
             if (entry.pageref == page.id) {
                 return true;
             }

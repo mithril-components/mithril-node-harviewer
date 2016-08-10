@@ -16,55 +16,69 @@ const utilities         = require("./utilities");
 
 // Compute and return JSON containing data to render pie charts about har content.
 const controller = (data, colors) => {
+
     // Define variables to store and compute data for the chartpie.
     let blocked = 0, dns = 0, connect = 0, send = 0, wait = 0, receive = 0, ssl = 0,
         html = 0, javascript = 0, css = 0, image = 0, flash = 0, others = 0,
         headSent = 0, bodySent = 0, headReceived = 0, bodyReceived = 0,
         downloaded = 0, partial = 0, cache = 0;
 
-    for (let i = 0, len = data.entries.length; len > i; ++i) {
-        // Compute data to display the action type piechart.
-        blocked += (data.entries[i].timings.blocked ? data.entries[i].timings.blocked : 0);
-        dns += (data.entries[i].timings.dns ? data.entries[i].timings.dns : 0);
-        connect += (data.entries[i].timings.connect ? data.entries[i].timings.connect : 0);
-        send += (data.entries[i].timings.send ? data.entries[i].timings.send : 0);
-        wait += (data.entries[i].timings.wait ? data.entries[i].timings.wait : 0);
-        receive += (data.entries[i].timings.receive ? data.entries[i].timings.receive : 0);
-        ssl += (data.entries[i].timings.ssl ? data.entries[i].timings.ssl : 0);
+    if (data && data.entries) {
+        for (let i = 0, len = data.entries.length; len > i; ++i) {
+            // Compute data to display the action type piechart.
+            if (data.entries[i].timings) {
+                blocked += (data.entries[i].timings.blocked ? data.entries[i].timings.blocked : 0);
+                dns += (data.entries[i].timings.dns ? data.entries[i].timings.dns : 0);
+                connect += (data.entries[i].timings.connect ? data.entries[i].timings.connect : 0);
+                send += (data.entries[i].timings.send ? data.entries[i].timings.send : 0);
+                wait += (data.entries[i].timings.wait ? data.entries[i].timings.wait : 0);
+                receive += (data.entries[i].timings.receive ? data.entries[i].timings.receive : 0);
+                ssl += (data.entries[i].timings.ssl ? data.entries[i].timings.ssl : 0);
+     
+            }
 
-        // Compute data to display the languages and technologies used.
-        if (data.entries[i].response && data.entries[i].response.content && data.entries[i].response.content.mimeType) {
-            if (data.entries[i].response.content.mimeType.search("html") != -1) {
-                html += data.entries[i].response.bodySize;
+            // Compute data to display the languages and technologies used.
+            if (data.entries[i].response && data.entries[i].response.content && data.entries[i].response.content.mimeType) {
+                if (data.entries[i].response.content.mimeType.search("html") != -1) {
+                    html += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
+                }
+                else if (data.entries[i].response.content.mimeType.search("javascript") != -1) {
+                    javascript += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
+                }
+                else if (data.entries[i].response.content.mimeType.search("css") != -1) {
+                    css += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
+                }
+                else if (data.entries[i].response.content.mimeType.search("image") != -1) {
+                    image += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
+                }
+                else if (data.entries[i].response.content.mimeType.search("flash") != -1) {
+                    flash += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
+                }
+                else {
+                    others += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
+                }   
             }
-            else if (data.entries[i].response.content.mimeType.search("javascript") != -1) {
-                javascript += data.entries[i].response.bodySize;
+            // Compute data to display the headers and bodies.\
+            if (data.entries[i].request) {
+                headSent +=  (data.entries[i].request.headersSize ? data.entries[i].request.headersSize : 0);
+                bodySent += (data.entries[i].request.bodySize ? data.entries[i].request.bodySize: 0);
             }
-            else if (data.entries[i].response.content.mimeType.search("css") != -1) {
-                css += data.entries[i].response.bodySize;
+            if (data.entries[i].response) {
+                headReceived += (data.entries[i].response.headersSize ? data.entries[i].response.headersSize : 0);
+                bodyReceived += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
             }
-            else if (data.entries[i].response.content.mimeType.search("image") != -1) {
-                image += data.entries[i].response.bodySize;
+
+            // Compute data to display the headers and bodies.
+            //partial += data.entries[i].response.bodySize;
+            if (data.entries[i].response && data.entries[i].response.bodySize) {
+                if (data.entries[i].cache && data.entries[i].cache.afterRequest) {
+                    cache += data.entries[i].response.bodySize;
+                }
+                else {
+                    downloaded += data.entries[i].response.bodySize;
+                }
             }
-            else if (data.entries[i].response.content.mimeType.search("flash") != -1) {
-                flash += data.entries[i].response.bodySize;
-            }
-            else {
-                others += data.entries[i].response.bodySize;
-            }   
         }
-        // Compute data to display the headers and bodies.
-        headSent +=  (data.entries[i].request.headersSize ? data.entries[i].request.headersSize : 0);
-        bodySent += (data.entries[i].request.bodySize ? data.entries[i].request.bodySize: 0);
-        headReceived += (data.entries[i].response.headersSize ? data.entries[i].response.headersSize : 0);
-        bodyReceived += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
-
-        // Compute data to display the headers and bodies.
-        //partial += data.entries[i].response.bodySize;
-        if (data.entries[i].cache.afterRequest)
-            cache += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
-        else
-            downloaded += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
     }
 
     return [
