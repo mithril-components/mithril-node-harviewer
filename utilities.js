@@ -12,11 +12,17 @@ const sizePrecision = (size) => {
 
     size = size < 0 ? 0 : size;
 
-    if (size > 10000) {
-        return (size / 1000).toPrecision(3) + "KB";
+    if (size > 1099511627776) {
+        return (size / 1099511627776).toPrecision(3) + "TB";
     }
-    else if (size > 1000) {
-        return (size / 1000).toPrecision(2) + "KB";
+    else if (size > 1073741824) {
+        return (size / 1073741824).toPrecision(3) + "GB";
+    }
+    else if (size > 1048576) {
+        return (size / 1048576).toPrecision(3) + "MB";
+    }
+    else if (size > 1024) {
+        return (size / 1024).toPrecision(3) + "KB";
     }
     else {
         return size + "B";

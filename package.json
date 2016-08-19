@@ -1,6 +1,6 @@
 {
   "name": "mithril-node-harviewer",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "HAR viewer component for Mithril NodeJS",
   "main": "harviewer.js",
   "dependencies": {
