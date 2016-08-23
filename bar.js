@@ -85,7 +85,7 @@ const view = (ctrl) => {
         m("text", {
             x:      (ctrl.width * startedDateTime) / ctrl.onLoad + 1 + "%",
             y:      ctrl.height * 3 / 4
-        }, (ctrl.value > 1000 ? ((ctrl.value / 1000).toPrecision(2) + " s") : (ctrl.value + " ms"))),
+        }, (ctrl.value > 1000 ? ((ctrl.value / 1000).toPrecision(2) + " s") : (ctrl.value.toPrecision(3) + " ms"))),
         // Draw the stroke showing when the page is loaded.
         m("line", {
             x1:             ctrl.width + "%",
