@@ -40,7 +40,7 @@ const timePrecision = (time) => {
         return (time / 1000).toPrecision(3) + " s";
     }
     else {
-        return time + " ms";
+        return time.toPrecision(3) + " ms";
     }
 }
 

@@ -87,7 +87,7 @@ const view = (ctrl) => {
                             (entry.request && entry.request.method ? entry.request.method : "") + " ",
                             m("a", { href: (entry.request && entry.request.url ? entry.request.url : "")  }, (entry && entry.request && entry.request.url ? entry.request.url : ""))
                         ]),
-                        m("div.col-md-1.col-xs-12.col-print-12", status.charAt(0) === "4" || status.charAt(0) === "5" ? { class: "text-danger" } : {}, status + " " + (entry.response && entry.response.statusText ? entry.response.statusText : "Timeout")),
+                        m("div.col-md-1.col-xs-12.col-print-12", status.charAt(0) === "4" || status.charAt(0) === "5" ? { class: "text-danger" } : {}, status + " " + (entry.response && entry.response.statusText ? entry.response.statusText : "")),
                         m("div.col-md-1.col-xs-12.col-print-12", utilities.sizePrecision(entry.response && entry.response.bodySize ? entry.response.bodySize : null)),
                         m("div.col-md-8.col-xs-12.col-print-12", renderBar(ctrl.page, ctrl.firstEntry, entry, ctrl.colors))
                     ])
