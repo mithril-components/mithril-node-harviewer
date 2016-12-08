@@ -15,99 +15,102 @@ const utilities         = require("./utilities");
 
 
 // Compute and return JSON containing data to render pie charts about har content.
-const controller = (data, colors) => {
+const controller = (har, colors) => {
     // Define variables to store and compute data for the chartpie.
-    let blocked = 0, dns = 0, connect = 0, send = 0, wait = 0, receive = 0, ssl = 0,
-        html = 0, javascript = 0, css = 0, image = 0, flash = 0, others = 0,
-        headSent = 0, bodySent = 0, headReceived = 0, bodyReceived = 0,
-        downloaded = 0, partial = 0, cache = 0;
+    let downloaded = 0, partial = 0, cache = 0;
+    let data = {
+        timings: [
+            { title: `Blocked`, name: "blocked",    value: 0, color: colors.blocked },
+            { title: `DNS`,     name: "dns",        value: 0, color: colors.dns },
+            { title: `SSL/TLS`, name: "ssl",        value: 0, color: colors.ssl },
+            { title: `Connect`, name: "connect",    value: 0, color: colors.connect },
+            { title: `Send`,    name: "send",       value: 0, color: colors.send },
+            { title: `Wait`,    name: "wait",       value: 0, color: colors.wait },
+            { title: `Receive`, name: "receive",    value: 0, color: colors.receive }
+        ],
+        mimeTypes: [
+            { title: `HTML/Text`,   name: "html",       value: 0, color: colors.html },
+            { title: `JavaScript`,  name: "javascript", value: 0, color: colors.javascript },
+            { title: `CSS`,         name: "css",        value: 0, color: colors.css },
+            { title: `Image`,       name: "image",      value: 0, color: colors.image },
+            { title: `Flash`,       name: "flash",      value: 0, color: colors.flash },
+            { title: `Others`,      name: "others",     value: 0, color: colors.others }
+        ],
+        request: [
+            { title: `Headers Sent`,    name: "headersSize",  value: 0, color: colors.headSent },
+            { title: `Bodies Sent`,     name: "bodySize",     value: 0,  color: colors.bodySent }
+        ],
+        response : [
+            { title: `Headers Received`,    name: "headersSize",  value: 0, color: colors.headReceived },
+            { title: `Bodies Received`,     name: "bodySize",     value: 0, color: colors.bodyReceived }
+        ]
+    };
 
-    for (let i = 0, len = data.entries.length; len > i; ++i) {
-        // Compute data to display the action type piechart.
-        blocked += (data.entries[i].timings.blocked ? data.entries[i].timings.blocked : 0);
-        dns += (data.entries[i].timings.dns ? data.entries[i].timings.dns : 0);
-        connect += (data.entries[i].timings.connect ? data.entries[i].timings.connect : 0);
-        send += (data.entries[i].timings.send ? data.entries[i].timings.send : 0);
-        wait += (data.entries[i].timings.wait ? data.entries[i].timings.wait : 0);
-        receive += (data.entries[i].timings.receive ? data.entries[i].timings.receive : 0);
-        ssl += (data.entries[i].timings.ssl ? data.entries[i].timings.ssl : 0);
+    // Check if the entries array is present (object required).
+    if (har && har.entries) {
+        for (let i = 0, len = har.entries.length; len > i; ++i) {     
+            // Compute data to display the action type piechart.
+            if (har.entries[i].timings) {
+                data.timings.forEach(item => {
+                    item.value += (har.entries[i].timings[item.name] && har.entries[i].timings[item.name] > 0 ? har.entries[i].timings[item.name] : 0);
+                });
+            }
 
-        // Compute data to display the languages and technologies used.
-        if (data.entries[i].response && data.entries[i].response.content && data.entries[i].response.content.mimeType) {
-            if (data.entries[i].response.content.mimeType.search("html") != -1) {
-                html += data.entries[i].response.bodySize;
+            if (har.entries[i].response) {
+                // Compute data to display the languages and technologies used.
+                if (har.entries[i].response.content && har.entries[i].response.content.mimeType) {
+                    data.mimeTypes.forEach(item => {
+                        if (har.entries[i].response.content.mimeType.search(item.name) != -1) {
+                            item.value += (har.entries[i].response.bodySize && har.entries[i].response.bodySize > 0 ? har.entries[i].response.bodySize : (har.entries[i].response.content.size ? har.entries[i].response.content.size : 0));
+                        }
+                    });
+                }
+                // Compute data to display the headers and bodies.
+                data.response.forEach(item => {
+                    item.value += (har.entries[i].response[item.name] && har.entries[i].response[item.name] > 0 ? har.entries[i].response[item.name] : 0);
+                });
+
+                // ?? : partial += data.entries[i].response.bodySize;
+                if (har.entries[i].response.bodySize) {
+                    if (har.entries[i].cache && har.entries[i].cache.afterRequest) {
+                        cache += har.entries[i].response.bodySize;
+                    }
+                    else {
+                        downloaded += har.entries[i].response.bodySize;
+                    }
+                }
             }
-            else if (data.entries[i].response.content.mimeType.search("javascript") != -1) {
-                javascript += data.entries[i].response.bodySize;
+
+            if (har.entries[i].request) {
+                data.request.forEach(item => {
+                    item.value += (har.entries[i].request[item.name] && har.entries[i].response[item.name] > 0 ? har.entries[i].request[item.name] : 0);
+                });
             }
-            else if (data.entries[i].response.content.mimeType.search("css") != -1) {
-                css += data.entries[i].response.bodySize;
-            }
-            else if (data.entries[i].response.content.mimeType.search("image") != -1) {
-                image += data.entries[i].response.bodySize;
-            }
-            else if (data.entries[i].response.content.mimeType.search("flash") != -1) {
-                flash += data.entries[i].response.bodySize;
-            }
-            else {
-                others += data.entries[i].response.bodySize;
-            }   
         }
-        // Compute data to display the headers and bodies.
-        headSent +=  (data.entries[i].request.headersSize ? data.entries[i].request.headersSize : 0);
-        bodySent += (data.entries[i].request.bodySize ? data.entries[i].request.bodySize: 0);
-        headReceived += (data.entries[i].response.headersSize ? data.entries[i].response.headersSize : 0);
-        bodyReceived += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
-
-        // Compute data to display the headers and bodies.
-        //partial += data.entries[i].response.bodySize;
-        if (data.entries[i].cache.afterRequest)
-            cache += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
-        else
-            downloaded += (data.entries[i].response.bodySize ? data.entries[i].response.bodySize : 0);
     }
+
+    data.mimeTypes.forEach(item => {
+        item.value = (item.value > 0 ? item.value : 0) / 100;
+    });
 
     return [
         chart.controller({
             width:  100,
             height: 100,
             title: "Summary of request times",
-            parts:
-            [
-                { title: `Blocked`,   value: (blocked > 0 ? blocked : 0),   color: colors.blocked },
-                { title: `DNS`,       value: (dns > 0 ? dns : 0),           color: colors.dns },
-                { title: `SSL/TLS`,   value: (ssl > 0 ? ssl : 0),                             color: colors.ssl },
-                { title: `Connect`,   value: (connect > 0 ? connect : 0),   color: colors.connect },
-                { title: `Send`,      value: (send > 0 ? send : 0),         color: colors.send },
-                { title: `Wait`,      value: (wait > 0 ? wait : 0),         color: colors.wait },
-                { title: `Receive`,   value: (receive > 0 ? receive : 0),   color: colors.receive }
-            ]
+            parts: data.timings
         }),
         chart.controller({
             width:  100,
             height: 100,
             title: "Summary of content types",
-            parts:
-            [
-                { title: `HTML/Text`,   value: (html > 0 ? html : 0) / 100,               color: colors.html },
-                { title: `JavaScript`,  value: (javascript > 0 ? javascript : 0) / 100,   color: colors.javascript },
-                { title: `CSS`,         value: (css > 0 ? css : 0) / 100,                 color: colors.css },
-                { title: `Image`,       value: (image > 0 ? image : 0)  / 100,            color: colors.image },
-                { title: `Flash`,       value: (flash > 0 ? flash : 0) / 100,             color: colors.flash },
-                { title: `Others`,      value: (others > 0 ? others : 0) / 100,           color: colors.others }
-            ]
+            parts: data.mimeTypes
         }),
         chart.controller({
             width:  100,
             height: 100,
             title: "Sent and received bodies & headers",
-            parts:
-            [
-                { title: `Headers Sent`,      value: (headSent > 0 ? headSent : 0),           color: colors.headSent },
-                { title: `Bodies Sent`,       value: (bodySent > 0 ? bodySent : 0),           color: colors.bodySent },
-                { title: `Headers Received`,  value: (headReceived > 0 ? headReceived : 0),   color: colors.headReceived },
-                { title: `Bodies Received`,   value: (bodyReceived > 0 ? bodyReceived : 0),   color: colors.bodyReceived }
-          ]
+            parts: data.request.concat(data.response)
         }),
         chart.controller({
             width:  100,
@@ -127,7 +130,7 @@ const controller = (data, colors) => {
 const view = (ctrl) => {
     return m("div.row", [
         ctrl.map((chartCtrl, index) => {
-            return m("div.col-md-3.col-sm-6.col-xs-12.piecharts", [
+            return m("div.col-lg-3.col-md-6.col-xs-12.piecharts", [
                 m("h6.row", chartCtrl.title),
                 // Render pie charts.
                 m("div.row", chart.view(chartCtrl)),
@@ -135,7 +138,7 @@ const view = (ctrl) => {
                 chartCtrl.parts.map(part => {
                     return m("div.row.piechart-table", [
                             m("div.col-xs-6", part.title),
-                            m("div.col-xs-6", (index > 0 ? utilities.sizePrecision(part.value) : utilities.timePrecision(part.value)))
+                            (part.title === "Wait" || part.title === "Receive" ? "" : m("div.col-xs-6", (index > 0 ? utilities.sizePrecision(part.value) : utilities.timePrecision(part.value))))
                         ]);
                 })
             ]);

@@ -15,6 +15,9 @@ const chartlist = require("./chartlist");
 
 // Return JSON containing all data to display har data.
 const controller = (harFile) => {
+    // Checking if the root object "log" is present (required object).
+    const har = (harFile && harFile.log ? harFile.log : {});
+
     // Define a unique colors used for bar and pie chart rendering.
     const colors = {
         blocked:      "#1ab0c2",
@@ -40,16 +43,18 @@ const controller = (harFile) => {
     };
 
     return {
-        chartlistCtrl: chartlist.controller(harFile.log, colors),
-        entrylistCtrl: entrylist.controller(harFile.log, colors)
+        chartlistCtrl: chartlist.controller(har, colors),
+        entrylistCtrl: entrylist.controller(har, colors)
     }
 }
 
 // Return view to render har data.
 const view = (ctrl) => {
-    return m("div.harviewer", [
-        chartlist.view(ctrl.chartlistCtrl),
-        entrylist.view(ctrl.entrylistCtrl)
+    return m("div", [
+        m("div.harviewer", [
+            chartlist.view(ctrl.chartlistCtrl),
+            entrylist.view(ctrl.entrylistCtrl)
+        ])
     ]);
 }
 
