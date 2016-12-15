@@ -31,13 +31,14 @@ const controller = (data, colors) => {
     });
 
     let pages = [{
-        startedDateTime: orderEntries[0].startedDateTime,
-        id: (orderEntries[0].pageref ? orderEntries[0].pageref : orderEntries[0].request.url),
-        title: orderEntries[0].request.url,
+        startedDateTime: (orderEntries[0] && orderEntries[0].startedDateTime ? orderEntries[0].startedDateTime : 0),
+        id: (orderEntries[0] && orderEntries[0].pageref ? orderEntries[0].pageref : ""),
+        title: (orderEntries[0] && orderEntries[0].request && orderEntries[0].request.url ? orderEntries[0].request.url : ""),
         pageTimings: {
-            onLoad: Date.parse(orderEntries[orderEntries.length - 1].startedDateTime) - Date.parse(orderEntries[0].startedDateTime)
+            onLoad: (orderEntries[0] && orderEntries[0].startedDateTime ? Date.parse(orderEntries[orderEntries.length - 1].startedDateTime) - Date.parse(orderEntries[0].startedDateTime) : 0)
         }
     }];
+
     if (data && data.pages) {
         pages = data.pages;
     }

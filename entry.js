@@ -33,7 +33,7 @@ const controller = (page, entries, colors) => {
 
     if (entries) {
         entries.forEach((entry, index) => {
-            totalSize += (entry.response && entry.response.bodySize && entry.response.bodySize > 0 ? entry.response.bodySize : (entry.response.content.size ? entry.response.content.size : 0));
+            totalSize += (entry.response && entry.response.bodySize && entry.response.bodySize > 0 ? entry.response.bodySize : (entry.response && entry.response.content && entry.response.content.size ? entry.response.content.size : 0));
             biggestTime = (entry.time > biggestTime ? entry.time : biggestTime);
         });
     }
@@ -57,7 +57,7 @@ const view = (ctrl) => {
             m("h2", ctrl.page.title),
             m("div.row", [
                 m("div.col-md-3.col-xs-6", `Total load time : `),
-                m("div.col-md-9.col-xs-6", (ctrl.page.pageTimings && ctrl.page.pageTimings.onLoad ? utilities.timePrecision(ctrl.page.pageTimings.onLoad) : utilities.timePrecision(null)))
+                m("div.col-md-9.col-xs-6", (ctrl.page.pageTimings && ctrl.page.pageTimings.onLoad ? utilities.timePrecision(ctrl.page.pageTimings.onLoad) : utilities.timePrecision(ctrl.biggestTime)))
             ]),
             m("div.row", [
                 m("div.col-md-3.col-xs-6", `Time to first byte : `),
@@ -87,8 +87,8 @@ const view = (ctrl) => {
                             (entry.request && entry.request.method ? entry.request.method : "") + " ",
                             m("a", { href: (entry.request && entry.request.url ? entry.request.url : "")  }, (entry && entry.request && entry.request.url ? entry.request.url : ""))
                         ]),
-                        m("div.col-md-1.col-xs-12.col-print-12", (status.charAt(0) === "4" || status.charAt(0) === "5" ? { class: "text-danger" } : {}), status + " " + entry.response.statusText),
-                        m("div.col-md-1.col-xs-12.col-print-12", utilities.sizePrecision(entry.response && entry.response.bodySize && entry.response.bodySize > 0 ? entry.response.bodySize : (entry.response.content.size ? entry.response.content.size : 0))),
+                        m("div.col-md-1.col-xs-12.col-print-12", (status.charAt(0) === "4" || status.charAt(0) === "5" ? { class: "text-danger" } : {}), status + " " + (entry.response.statusText ? entry.response.statusText : "" )),
+                        m("div.col-md-1.col-xs-12.col-print-12", utilities.sizePrecision(entry.response && entry.response.bodySize && entry.response.bodySize > 0 ? entry.response.bodySize : (entry.response && entry.response.content && entry.response.content.size ? entry.response.content.size : 0))),
                         m("div.col-md-8.col-xs-12.col-print-12", renderBar(ctrl.page, ctrl.firstEntry, entry, ctrl.colors))
                     ])
                 ]);

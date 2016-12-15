@@ -29,12 +29,12 @@ const controller = (har, colors) => {
             { title: `Receive`, name: "receive",    value: 0, color: colors.receive }
         ],
         mimeTypes: [
-            { title: `HTML/Text`,   name: "html",       value: 0, color: colors.html },
-            { title: `JavaScript`,  name: "javascript", value: 0, color: colors.javascript },
-            { title: `CSS`,         name: "css",        value: 0, color: colors.css },
-            { title: `Image`,       name: "image",      value: 0, color: colors.image },
-            { title: `Flash`,       name: "flash",      value: 0, color: colors.flash },
-            { title: `Others`,      name: "others",     value: 0, color: colors.others }
+            { title: `HTML`,        name: "html",       value: 0, color: colors.html, occurence: 0 },
+            { title: `JavaScript`,  name: "javascript", value: 0, color: colors.javascript, occurence: 0 },
+            { title: `CSS`,         name: "css",        value: 0, color: colors.css, occurence: 0 },
+            { title: `Image`,       name: "image",      value: 0, color: colors.image, occurence: 0 },
+            { title: `Flash`,       name: "flash",      value: 0, color: colors.flash, occurence: 0 },
+            { title: `Others`,      name: "others",     value: 0, color: colors.others, occurence: 0 }
         ],
         request: [
             { title: `Headers Sent`,    name: "headersSize",  value: 0, color: colors.headSent },
@@ -48,6 +48,7 @@ const controller = (har, colors) => {
 
     // Check if the entries array is present (object required).
     if (har && har.entries) {
+        let foundMimeType = false;
         for (let i = 0, len = har.entries.length; len > i; ++i) {     
             // Compute data to display the action type piechart.
             if (har.entries[i].timings) {
@@ -59,9 +60,16 @@ const controller = (har, colors) => {
             if (har.entries[i].response) {
                 // Compute data to display the languages and technologies used.
                 if (har.entries[i].response.content && har.entries[i].response.content.mimeType) {
-                    data.mimeTypes.forEach(item => {
-                        if (har.entries[i].response.content.mimeType.search(item.name) != -1) {
+                    foundMimeType = false;
+                    data.mimeTypes.forEach((item, idx) => {
+                        if (!foundMimeType && har.entries[i].response.content.mimeType.search(item.name) != -1) {
+                            foundMimeType = true;
                             item.value += (har.entries[i].response.bodySize && har.entries[i].response.bodySize > 0 ? har.entries[i].response.bodySize : (har.entries[i].response.content.size ? har.entries[i].response.content.size : 0));
+                            item.occurence++;
+                        }
+                        else if (!foundMimeType && idx === data.mimeTypes.length - 1) {
+                            item.value += (har.entries[i].response.bodySize && har.entries[i].response.bodySize > 0 ? har.entries[i].response.bodySize : (har.entries[i].response.content.size ? har.entries[i].response.content.size : 0));
+                            item.occurence++;
                         }
                     });
                 }
@@ -73,24 +81,31 @@ const controller = (har, colors) => {
                 // ?? : partial += data.entries[i].response.bodySize;
                 if (har.entries[i].response.bodySize) {
                     if (har.entries[i].cache && har.entries[i].cache.afterRequest) {
-                        cache += har.entries[i].response.bodySize;
+                        cache += (har.entries[i].response.bodySize && har.entries[i].response.bodySize > 0 ? har.entries[i].response.bodySize : 0);
                     }
                     else {
-                        downloaded += har.entries[i].response.bodySize;
+                        downloaded += (har.entries[i].response.bodySize && har.entries[i].response.bodySize > 0 ? har.entries[i].response.bodySize : 0);
                     }
                 }
             }
 
             if (har.entries[i].request) {
                 data.request.forEach(item => {
-                    item.value += (har.entries[i].request[item.name] && har.entries[i].response[item.name] > 0 ? har.entries[i].request[item.name] : 0);
+                    item.value += (har.entries[i].request[item.name] && har.entries[i].request[item.name] > 0 ? har.entries[i].request[item.name] : 0);
                 });
             }
         }
+        /*
+        console.log(data.timings);
+        console.log(data.mimeTypes);
+        console.log(data.request);
+        console.log(data.response);
+        */
+        
     }
 
     data.mimeTypes.forEach(item => {
-        item.value = (item.value > 0 ? item.value : 0) / 100;
+        item.value = (item.value > 0 ? item.value : 0);
     });
 
     return [
